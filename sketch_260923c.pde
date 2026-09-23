@@ -2,7 +2,8 @@
 
 PVector screenSize = new PVector(1920,1080);
 int alivePercentage = 20; // 100% results in every cell dying because of overpopulation
-int cellSize = 10;
+int cellSize = 15;
+int fps = 8; 
 
 // --------------------------------------------
 PVector gridSize = new PVector(screenSize.x / cellSize, screenSize.y / cellSize);
@@ -20,7 +21,7 @@ void settings() {
 }
 
 void setup() {
-  frameRate(6);
+  frameRate(fps);
   background(0);
   grid = randomize();
 }
