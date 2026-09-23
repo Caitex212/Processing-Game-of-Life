@@ -2,9 +2,9 @@
 
 PVector screenSize = new PVector(1920,1080);
 int alivePercentage = 20; // 100% results in every cell dying because of overpopulation
+int cellSize = 10;
 
 // --------------------------------------------
-int cellSize = 2;
 PVector gridSize = new PVector(screenSize.x / cellSize, screenSize.y / cellSize);
 
 int windowW = (int)(gridSize.x * cellSize);
@@ -12,6 +12,8 @@ int windowH = (int)(gridSize.y * cellSize);
 
 boolean[][] grid;
 boolean[][] newGrid = new boolean[(int)gridSize.x][(int)gridSize.y];
+
+boolean running = true;
 
 void settings() {
   size(windowW, windowH);
@@ -24,9 +26,11 @@ void setup() {
 }
 
 void draw() {
-  nextStep();
+  if (running) {
+    nextStep();
   
-  renderFrame();
+    renderFrame();
+  }
 }
 
 boolean[][] randomize() {
@@ -48,7 +52,7 @@ void nextStep() {
       if (alive) {
         newGrid[x][y] = (counter == 2 || counter == 3); // survive
       } else {
-        newGrid[x][y] = (counter == 3);                  // birth
+        newGrid[x][y] = (counter == 3);                 // birth
       }
     }
   }
@@ -88,6 +92,18 @@ void renderFrame() {
         fill(0);
       }
       square(x * cellSize, y * cellSize, cellSize);
+    }
+  }
+}
+
+void keyPressed() {
+  if (key == ' ') {
+    running = !running;
+  }
+  if (key == CODED) {
+    if (keyCode == RIGHT && !running) {
+      nextStep();
+      renderFrame();
     }
   }
 }
