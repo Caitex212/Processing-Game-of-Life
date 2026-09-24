@@ -8,13 +8,13 @@
 //
 // --------------------------------------------
 
-PVector screenSize = new PVector(1920,1080);
+PVector screenSize = new PVector(2560,1080);
 int alivePercentage = 20; // 100% results in every cell dying because of overpopulation
 int cellSize = 15;
 int fps = 8; 
 
 // --------------------------------------------
-PVector gridSize = new PVector(screenSize.x / cellSize, screenSize.y / cellSize);
+PVector gridSize = new PVector(floor(screenSize.x / cellSize), floor(screenSize.y / cellSize));
 
 int windowW = (int)(gridSize.x * cellSize);
 int windowH = (int)(gridSize.y * cellSize);
@@ -43,10 +43,12 @@ void draw() {
   
     renderFrame();
   } else if (mousePressed) {
-    if (mouseButton == LEFT) {
-      grid[(int)(mouseX / cellSize)][(int)(mouseY / cellSize)] = true;
-    } else if (mouseButton == RIGHT) {
-      grid[(int)(mouseX / cellSize)][(int)(mouseY / cellSize)] = false;
+    if (mouseX >= 0 && mouseX < windowW && mouseY >= 0 && mouseY < windowH) {
+      if (mouseButton == LEFT) {
+        grid[(int)(mouseX / cellSize)][(int)(mouseY / cellSize)] = true;
+      } else if (mouseButton == RIGHT) {
+        grid[(int)(mouseX / cellSize)][(int)(mouseY / cellSize)] = false;
+      }
     }
     renderFrame();
   }
