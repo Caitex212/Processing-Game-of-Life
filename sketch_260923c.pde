@@ -1,4 +1,12 @@
 // --------------------------------------------
+//
+// Instructions:
+//  Pause with SPACE
+//  Clear with C
+//  Randomize with R
+//  When paused, draw with left and right mouse button
+//
+// --------------------------------------------
 
 PVector screenSize = new PVector(1920,1080);
 int alivePercentage = 20; // 100% results in every cell dying because of overpopulation
@@ -16,6 +24,9 @@ boolean[][] newGrid = new boolean[(int)gridSize.x][(int)gridSize.y];
 
 boolean running = true;
 
+boolean rightMouse = false;
+boolean leftMouse = false;
+
 void settings() {
   size(windowW, windowH);
 }
@@ -28,8 +39,17 @@ void setup() {
 
 void draw() {
   if (running) {
+    frameRate(fps);
     nextStep();
   
+    renderFrame();
+  } else if (mousePressed) {
+    frameRate(60);
+    if (mouseButton == LEFT) {
+      grid[(int)(mouseX / cellSize)][(int)(mouseY / cellSize)] = true;
+    } else if (mouseButton == RIGHT) {
+      grid[(int)(mouseX / cellSize)][(int)(mouseY / cellSize)] = false;
+    }
     renderFrame();
   }
 }
@@ -100,7 +120,14 @@ void renderFrame() {
 void keyPressed() {
   if (key == ' ') {
     running = !running;
+  } else if (key == 'c' && !running) {
+    grid = randomize();
+    renderFrame();
+  } else if (key == 'r' && !running) {
+    grid = new boolean[(int)gridSize.x][(int)gridSize.y];
+    renderFrame();
   }
+    
   if (key == CODED) {
     if (keyCode == RIGHT && !running) {
       nextStep();
