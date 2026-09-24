@@ -39,12 +39,10 @@ void setup() {
 
 void draw() {
   if (running) {
-    frameRate(fps);
     nextStep();
   
     renderFrame();
   } else if (mousePressed) {
-    frameRate(60);
     if (mouseButton == LEFT) {
       grid[(int)(mouseX / cellSize)][(int)(mouseY / cellSize)] = true;
     } else if (mouseButton == RIGHT) {
@@ -120,10 +118,11 @@ void renderFrame() {
 void keyPressed() {
   if (key == ' ') {
     running = !running;
-  } else if (key == 'c' && !running) {
+    frameRate(running ? fps : 60);
+  } else if (key == 'r' && !running) {
     grid = randomize();
     renderFrame();
-  } else if (key == 'r' && !running) {
+  } else if (key == 'c' && !running) {
     grid = new boolean[(int)gridSize.x][(int)gridSize.y];
     renderFrame();
   }
