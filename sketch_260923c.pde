@@ -4,11 +4,15 @@
 //  Pause with SPACE
 //  Clear with C
 //  Randomize with R
-//  When paused, draw with left and right mouse button
+//  Draw with left and right mouse button
+//  Save the grid with S
+//  Load a saved grid with L
 //
 // --------------------------------------------
 
-PVector screenSize = new PVector(2560,1080);
+JSONObject json;
+
+PVector screenSize = new PVector(1920,1080);
 int alivePercentage = 20; // 100% results in every cell dying because of overpopulation
 int cellSize = 15;
 int fps = 8; 
@@ -121,12 +125,51 @@ void keyPressed() {
   if (key == ' ') {
     running = !running;
     frameRate(running ? fps : 60);
+    
   } else if (key == 'r' && !running) {
     grid = randomize();
     renderFrame();
+    
   } else if (key == 'c' && !running) {
     grid = new boolean[(int)gridSize.x][(int)gridSize.y];
     renderFrame();
+    
+  } else if (key == 'l' && !running) {
+    JSONObject json = loadJSONObject("save.json");
+    if (json == null) {
+      println("No save file found.");
+    } else {
+      grid = new boolean[(int)gridSize.x][(int)gridSize.y];
+      JSONArray cells = json.getJSONArray("cells");
+      for (int i = 0; i < cells.size(); i++) {
+        JSONArray cell = cells.getJSONArray(i);
+        int x = cell.getInt(0);
+        int y = cell.getInt(1);
+        grid[x][y] = true;
+      }
+      renderFrame();
+    }
+
+  } else if (key == 's' && !running) {
+    JSONObject json = new JSONObject();
+    json.setInt("cols", grid[0].length);
+    json.setInt("rows", grid.length);
+  
+    JSONArray cells = new JSONArray();
+    int count = 0;
+    for (int x = 0; x < gridSize.x; x++) {
+      for (int y = 0; y < gridSize.y; y++) {
+        if (grid[x][y]) {
+          JSONArray cell = new JSONArray();
+          cell.setInt(0, x);
+          cell.setInt(1, y);
+          cells.setJSONArray(count, cell);
+          count++;
+        }
+      }
+    }
+    json.setJSONArray("cells", cells);
+    saveJSONObject(json, "save.json");
   }
     
   if (key == CODED) {
