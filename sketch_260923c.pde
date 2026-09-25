@@ -10,8 +10,6 @@
 //
 // --------------------------------------------
 
-JSONObject json;
-
 PVector screenSize = new PVector(1920,1080);
 int alivePercentage = 20; // 100% results in every cell dying because of overpopulation
 int cellSize = 15;
@@ -137,7 +135,7 @@ void keyPressed() {
   } else if (key == 'l' && !running) {
     JSONObject json = loadJSONObject("save.json");
     if (json == null) {
-      println("No save file found.");
+      System.out.println("No save file found.");
     } else {
       grid = new boolean[(int)gridSize.x][(int)gridSize.y];
       JSONArray cells = json.getJSONArray("cells");
